@@ -7,6 +7,8 @@ enable_testing()
 set(SOURCES
   src/main.cpp
   src/GameObject.cpp
+  src/Scene.cpp
+  src/scenes/GameScene.cpp
 )
 
 add_executable(Snake ${SOURCES})

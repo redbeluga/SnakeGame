@@ -68,6 +68,9 @@
     "functional": "cpp",
     "iterator": "cpp",
     "utility": "cpp",
-    "__availability": "cpp"
+    "__availability": "cpp",
+    "deque": "cpp",
+    "ranges": "cpp",
+    "stack": "cpp"
   }
 }

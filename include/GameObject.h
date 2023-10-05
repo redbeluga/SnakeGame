@@ -12,14 +12,15 @@ class GameObject{
     sf::Vector2f relLoc;
     std::string name;
     GameObject* p;
-    std::list<GameObject*> c;
+    std::vector<GameObject*> c;
     sf::CircleShape circleShape;
+    bool shouldRender;
 
   public:
     sf::Vector2f getAbsLoc();
     sf::Vector2f getRelLoc();
     GameObject* getParent();
-    std::list<GameObject*> getChildren();
+    std::vector<GameObject*> getChildren();
     sf::CircleShape getCircleShape();
     std::string getName();
     
@@ -37,6 +38,7 @@ class GameObject{
     GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name);
     GameObject(sf::Vector2f absLoc, std::string name);
     GameObject(std::string name);
+    GameObject();
 };
 
 #endif

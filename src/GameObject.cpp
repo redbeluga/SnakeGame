@@ -5,7 +5,7 @@
 GameObject* GameObject::getParent(){
   return p;
 }
-std::list<GameObject*> GameObject::getChildren(){
+std::vector<GameObject*> GameObject::getChildren(){
   return c;
 }
 sf::CircleShape GameObject::getCircleShape(){
@@ -47,16 +47,17 @@ GameObject::GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name
   this->relLoc = relLoc;
   this->absLoc = sf::Vector2f(parent->absLoc.x + relLoc.x, parent->absLoc.y + relLoc.y);
   p = parent;
-  p->addChild(this);
   this->name = name;
-  std::cout << name << ": " << this->absLoc.x << ", " << this->absLoc.y <<  std::endl;
+  p->addChild(this);
 }
 GameObject::GameObject(sf::Vector2f absLoc, std::string name){
   this->absLoc = absLoc;
   this->relLoc = sf::Vector2f(0, 0);
   this->name = name;
-  std::cout << name << ": " << this->absLoc.x << ", " << this->absLoc.y <<  std::endl;
 }
 GameObject::GameObject(std::string name){
   this->name = name;
+}
+GameObject::GameObject(){
+
 }
