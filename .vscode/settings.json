@@ -71,6 +71,7 @@
     "__availability": "cpp",
     "deque": "cpp",
     "ranges": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "queue": "cpp"
   }
 }

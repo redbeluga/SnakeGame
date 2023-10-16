@@ -9,6 +9,7 @@ set(SOURCES
   src/GameObject.cpp
   src/Scene.cpp
   src/scenes/GameScene.cpp
+  src/SnakeObject.cpp
 )
 
 add_executable(Snake ${SOURCES})
