@@ -26,16 +26,16 @@ void SnakeObject::render(std::vector<GameObject*> &renderedGameObjects){
   }
 }
 
-void SnakeObject::newMove(sf::Vector2f move,sf::Vector2f location){
+void SnakeObject::newMove(sf::Vector2f move, sf::Vector2f location){
+  sf::Vector2f curDir = snakeHead->getCurDir();
+  if(move == curDir || curDir.x*move.x + curDir.y*move.y == -1) return;
   sf::Vector2f queuedLoc(location.x, location.y);
-  queuedLoc.x += (static_cast<int>(queuedLoc.x) % 40 == 0) ? 0 : 40 - static_cast<int>(queuedLoc.x) % 40;
-  queuedLoc.y += (static_cast<int>(queuedLoc.y) % 40 == 0) ? 0 : 40 - static_cast<int>(queuedLoc.y) % 40;
-  // std::cout << snakeHead->getAbsLoc().x << " : " << queuedLoc.x << std::endl;
-  // std::cout << snakeHead->getAbsLoc().y << " : " << queuedLoc.y << std::endl << std::endl;
+  int rX = static_cast<int>(queuedLoc.x) % 40;
+  int rY = static_cast<int>(queuedLoc.y) % 40;
+  queuedLoc.x += (rX == 0 || curDir.x == 0) ? 0 : curDir.x > 0 ? (40 - rX) : -rX;
+  queuedLoc.y += (rY == 0 || curDir.y == 0) ? 0 : curDir.y > 0 ? (40 - rY) : -rY;
 
-  // snakeHead->newMove(move, queuedLoc);
-  snakeHead->setCurDir(move);
-  snakeHead->getChildren()[0]->newMove(move, location);
+  snakeHead->newMove(move, queuedLoc);
 }
 
 void SnakeObject::updateMove(){

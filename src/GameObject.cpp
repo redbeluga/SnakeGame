@@ -68,15 +68,20 @@ void GameObject::setCircleShape(sf::CircleShape s, bool shouldRender, int zIndex
 void GameObject::newMove(sf::Vector2f moveDir, sf::Vector2f location){
   newDir.push(moveDir);
   targetLocation.push(location);
+  std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl; 
 }
 
 void GameObject::updateMove(){
+  
   if(targetLocation.size() > 0 && isPassedLocationTarget(curDir, targetLocation.front(), circleShape.getPosition())){
-    sf::Vector2f newLoc(abs((absLoc.x - targetLocation.front().x) * curDir.x) * newDir.front().x + targetLocation.front().x, abs((absLoc.y - targetLocation.front().y) * curDir.y) * newDir.front().y + targetLocation.front().y);
+    // sf::Vector2f newLoc(abs((absLoc.x - targetLocation.front().x) * curDir.x) * newDir.front().x + targetLocation.front().x, abs((absLoc.y - targetLocation.front().y) * curDir.y) * newDir.front().y + targetLocation.front().y);
     curDir = newDir.front();
-    circleShape.setPosition(newLoc);
+
+    std::cout << getName() << " current loc: " << getAbsLoc().x << ", " << getAbsLoc().y << std::endl;
+    std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl;
+    // clock.restart();
+    circleShape.setPosition(targetLocation.front());
     setAbsLoc(circleShape.getPosition());
-    clock.restart();
     for(auto c : this->getChildren()){
       c->newMove(curDir, targetLocation.front());
     }

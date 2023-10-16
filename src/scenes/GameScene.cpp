@@ -63,6 +63,9 @@ void GameScene::update(sf::RenderWindow &window) {
     moveInput = false;
   }
   snakeObject->updateMove();
+  // a->setPosition(a->getPosition() + sf::Vector2f(40, 0)*deltaTime);
+  // b->move(sf::Vector2f(40, 0)*deltaTime);
+
 
   clock.restart();
 }
@@ -80,12 +83,20 @@ void GameScene::render(sf::RenderWindow &window) {
   for(GameObject* g : renderedGameObjects){
     window.draw(g->getCircleShape());
   }
+
+  window.draw(*a);
+  window.draw(*b);
   window.display();
 }
 
 void GameScene::initializeGameObjects(){
   snakeObject = new SnakeObject();
   snakeObject->setShouldRender(true);
+
+  a = new sf::CircleShape(20);
+  b = new sf::CircleShape(20);
+  a->setPosition(0, 0);
+  b->setPosition(0, 40);
   allGameObjects.push_back(snakeObject);
 }
 

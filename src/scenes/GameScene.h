@@ -26,6 +26,8 @@ class GameScene : public Scene {
     //GameObjects
     bool moveInput = false;
     SnakeObject* snakeObject;
+    sf::CircleShape* a;
+    sf::CircleShape* b;
 
     // Event Poller
     sf::Event event;
