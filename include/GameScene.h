@@ -1,14 +1,17 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
-#include "../../include/Scene.h" // Include the base class header
-#include "../../include/GameObject.h"
-#include "../../include/SnakeObject.h"
+#include "Scene.h" // Include the base class header
+#include "GameObject.h"
+#include "SnakeObject.h"
+#include "SceneManager.h"
 
 #include <unordered_map>
 #include <vector>
 
 class GameScene : public Scene {
+  protected:
+    SceneManager& sceneManager;
   private:
     //Time
     sf::Clock clock;
@@ -25,6 +28,7 @@ class GameScene : public Scene {
 
     //GameObjects
     bool moveInput = false;
+    bool addBody = false;
     SnakeObject* snakeObject;
     sf::CircleShape* a;
     sf::CircleShape* b;
@@ -45,14 +49,16 @@ class GameScene : public Scene {
 
 
   public:
-    GameScene(); // Constructor
+    GameScene(SceneManager& sceneManager); // Constructor
     virtual void start() override;
-    virtual void handleInput() override;
+    virtual void inputHandler() override;
     virtual void update(sf::RenderWindow &window) override;
     virtual void render(sf::RenderWindow &window) override;
     virtual void eventPoller(sf::RenderWindow &window) override;
     void initializeGameObjects();
     void initializeBoard();
+    void collisionCheck();
+    void endGame();
     // void updateBoard(sf::RenderWindow &window);
 };
 

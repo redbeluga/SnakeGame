@@ -1,4 +1,6 @@
-#include "../include/GameObject.h"
+#include "../../include/GameObject.h"
+
+#include "../../include/Tag.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
@@ -22,6 +24,17 @@ sf::Vector2f GameObject::getAbsLoc(){
 }
 sf::Vector2f GameObject::getRelLoc(){
   return relLoc;
+}
+sf::Vector2f GameObject::getLastLocation(){
+  return lastLocation.top();
+}
+sf::Vector2f GameObject::getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir){
+  sf::Vector2f queuedLoc(curLoc.x, curLoc.y);
+  int rX = static_cast<int>(queuedLoc.x) % 40;
+  int rY = static_cast<int>(queuedLoc.y) % 40;
+  queuedLoc.x = static_cast<int>(queuedLoc.x) + ((rX == 0 || curDir.x == 0) ? 0 : curDir.x > 0 ? (40 - rX) : -rX);
+  queuedLoc.y = static_cast<int>(queuedLoc.y) + ((rY == 0 || curDir.y == 0) ? 0 : curDir.y > 0 ? (40 - rY) : -rY);
+  return queuedLoc;
 }
 bool GameObject::getShouldRender(){
   return shouldRender;
@@ -68,40 +81,45 @@ void GameObject::setCircleShape(sf::CircleShape s, bool shouldRender, int zIndex
 void GameObject::newMove(sf::Vector2f moveDir, sf::Vector2f location){
   newDir.push(moveDir);
   targetLocation.push(location);
-  std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl; 
+  // std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl; 
 }
 
-void GameObject::updateMove(){
-  
+void GameObject::updateMove(float deltaTime){
+  move(deltaTime);
   if(targetLocation.size() > 0 && isPassedLocationTarget(curDir, targetLocation.front(), circleShape.getPosition())){
-    // sf::Vector2f newLoc(abs((absLoc.x - targetLocation.front().x) * curDir.x) * newDir.front().x + targetLocation.front().x, abs((absLoc.y - targetLocation.front().y) * curDir.y) * newDir.front().y + targetLocation.front().y);
     curDir = newDir.front();
-
-    std::cout << getName() << " current loc: " << getAbsLoc().x << ", " << getAbsLoc().y << std::endl;
-    std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl;
+    float dx = abs(absLoc.x - targetLocation.front().x);
+    float dy = abs(absLoc.y - targetLocation.front().y);
+    sf::Vector2f newLoc;
+    if(dx != 0){
+      newLoc = sf::Vector2f(targetLocation.front().x, targetLocation.front().y + dx*newDir.front().y);
+    }
+    else{
+      newLoc = sf::Vector2f(targetLocation.front().x + dy*newDir.front().x, targetLocation.front().y);
+    }
+    // std::cout << getName() << " relative loc: " << getRelLoc().x << ", " << getRelLoc().y << std::endl;
+    // std::cout << getName() << " current loc: " << getAbsLoc().x << ", " << getAbsLoc().y << std::endl;
+    // std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl;
+    // std::cout << getName() << " new loc: " << newLoc.x << ", " << newLoc.y << std::endl;
     // clock.restart();
-    circleShape.setPosition(targetLocation.front());
+    circleShape.setPosition(newLoc);
     setAbsLoc(circleShape.getPosition());
     for(auto c : this->getChildren()){
       c->newMove(curDir, targetLocation.front());
     }
     newDir.pop();
+    lastLocation.push(targetLocation.front());
     targetLocation.pop();
   }
-  move();
   for(auto c : getChildren()){
-    c->updateMove();
+    c->updateMove(deltaTime);
   }
 }
 
-void GameObject::move(){
-  deltaTime = clock.getElapsedTime().asSeconds();
-
+void GameObject::move(float deltaTime){
   sf::Vector2f moveDir = moveSpeed * deltaTime * curDir;
   this->circleShape.move(moveDir);
   absLoc = circleShape.getPosition();
-
-  clock.restart();
 }
 
 void GameObject::setCircleShapePosition(sf::Vector2f newPos){
@@ -121,29 +139,36 @@ void GameObject::render(std::vector<GameObject*> &renderedGameObjects){
   }
 }
 
-GameObject::GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, sf::Vector2f curDir){
+GameObject::GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, sf::Vector2f curDir, Tag tag){
+  this->tag = tag;
   this->curDir = curDir;
   this->relLoc = relLoc;
   // std::cout << relLoc.x << ", " << relLoc.y << std::endl;
   this->absLoc = sf::Vector2f(parent->absLoc.x + relLoc.x, parent->absLoc.y + relLoc.y);
+  this->lastLocation.push(absLoc);
   p = parent;
   this->name = name;
   p->addChild(this);
 }
-GameObject::GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name){
+GameObject::GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, Tag tag){
+  this->tag = tag;
   this->relLoc = relLoc;
   // std::cout << relLoc.x << ", " << relLoc.y << std::endl;
   this->absLoc = sf::Vector2f(parent->absLoc.x + relLoc.x, parent->absLoc.y + relLoc.y);
+  this->lastLocation.push(absLoc);
   p = parent;
   this->name = name;
   p->addChild(this);
 }
-GameObject::GameObject(sf::Vector2f absLoc, std::string name){
+GameObject::GameObject(sf::Vector2f absLoc, std::string name, Tag tag){
+  this->tag = tag;
   this->absLoc = absLoc;
+  this->lastLocation.push(absLoc);
   this->relLoc = sf::Vector2f(0, 0);
   this->name = name;
 }
-GameObject::GameObject(std::string name){
+GameObject::GameObject(std::string name, Tag tag){
+  this->tag = tag;
   this->name = name;
 }
 GameObject::GameObject(){

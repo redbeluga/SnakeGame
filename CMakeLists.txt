@@ -6,10 +6,17 @@ enable_testing()
 
 set(SOURCES
   src/main.cpp
-  src/GameObject.cpp
-  src/Scene.cpp
+
+  src/gameobjects/GameObject.cpp
+  src/gameobjects/SnakeObject.cpp
+
+  src/scenes/Scene.cpp
   src/scenes/GameScene.cpp
-  src/SnakeObject.cpp
+  src/scenes/EndScene.cpp
+  # src/scenes/MainMenuScene.cpp
+  src/scenes/SceneManager.cpp
+
+  src/fonts/FontManager.cpp
 )
 
 add_executable(Snake ${SOURCES})
@@ -26,3 +33,4 @@ target_include_directories(Snake PRIVATE include)
 target_include_directories(Snake PRIVATE src)
 target_link_directories(Snake PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")

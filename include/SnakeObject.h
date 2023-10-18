@@ -1,10 +1,10 @@
 #ifndef SNAKEOBJECT_H
 #define SNAKEOBJECT_H
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
+#include <GameObject.h>
+#include <iostream>
 #include <vector>
-#include <../include/GameObject.h>
 #include <string>
 
 class SnakeObject : public GameObject{
@@ -21,7 +21,7 @@ class SnakeObject : public GameObject{
     virtual void render(std::vector<GameObject*> &renderedGameObjects) override;
     // virtual void move(sf::Vector2f move);
     virtual void newMove(sf::Vector2f move, sf::Vector2f location);
-    virtual void updateMove() override;
+    virtual void updateMove(float deltaTime) override;
 };
 
 #endif

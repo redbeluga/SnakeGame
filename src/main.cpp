@@ -1,5 +1,7 @@
 #include "../include/GameObject.h"
-#include "scenes/GameScene.h"
+#include "../include/SceneManager.h"
+#include "../include/GameObject.h"
+#include "../include/GameScene.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -13,18 +15,16 @@ int main()
 {
   sf::RenderWindow renderWindow(sf::VideoMode(1000, 1000), "SFML Demo");
   renderWindow.setKeyRepeatEnabled(false);
-
-  GameScene gameScene;
-  std::vector<Scene*> scenes;
-  int activeSceneIndex = 0;
-
-  scenes.push_back(&gameScene);
+  SceneManager sceneManager;
+  GameScene gameScene(sceneManager);
+  sceneManager.changeScene(&gameScene);
+  
 
   while(renderWindow.isOpen()){
-    scenes[activeSceneIndex]->eventPoller(renderWindow);
-    scenes[activeSceneIndex]->handleInput();
-    scenes[activeSceneIndex]->update(renderWindow);
-    scenes[activeSceneIndex]->render(renderWindow);
+    sceneManager.eventPoller(renderWindow);
+    sceneManager.inputHandler();
+    sceneManager.update(renderWindow);
+    sceneManager.render(renderWindow);
   }
   return 0;
 }

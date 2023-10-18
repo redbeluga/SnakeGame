@@ -1,17 +1,21 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "Tag.h"
+
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <queue>
+#include <stack>
 
 
 class GameObject{
   private:
     sf::Vector2f absLoc;
     sf::Vector2f relLoc;
-    sf::Clock clock;
+
+    Tag tag;
 
     sf::CircleShape circleShape;
 
@@ -19,6 +23,7 @@ class GameObject{
     sf::Vector2f curDir = sf::Vector2f(0, -1);
     std::queue<sf::Vector2f> newDir;
     std::queue<sf::Vector2f> targetLocation;
+    std::stack<sf::Vector2f> lastLocation;
     // bool newMoveQueued = false;
     float deltaTime;
 
@@ -40,7 +45,9 @@ class GameObject{
     std::string getName();
     bool getShouldRender();
     static int isPassedLocationTarget(sf::Vector2f moveDirection, sf::Vector2f targetLocation, sf::Vector2f objectLocation);
-    
+    sf::Vector2f getLastLocation();
+    static sf::Vector2f getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir);
+
     void setCurDir(sf::Vector2f dir);
     void setAbsLoc(sf::Vector2f absLoc);
     void setRelLoc(sf::Vector2f relLoc);
@@ -48,8 +55,8 @@ class GameObject{
     void addChild(GameObject* c);
     void setCircleShape(sf::CircleShape CircleShape, bool shouldRender, int zIndex);
     void newMove(sf::Vector2f move, sf::Vector2f location);
-    virtual void updateMove();
-    void move();
+    virtual void updateMove(float deltaTime);
+    void move(float deltaTime);
     void setCircleShapePosition(sf::Vector2f newPos);
     void setShouldRender(bool render);
     virtual void render(std::vector<GameObject*> &renderedGameObjects);
@@ -58,10 +65,10 @@ class GameObject{
         return a->zIndex > b->zIndex;
     }
     
-    GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, sf::Vector2f curDir);
-    GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name);
-    GameObject(sf::Vector2f absLoc, std::string name);
-    GameObject(std::string name);
+    GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, sf::Vector2f curDir, Tag tag);
+    GameObject(sf::Vector2f relLoc, GameObject* parent, std::string name, Tag tag);
+    GameObject(sf::Vector2f absLoc, std::string name, Tag tag);
+    GameObject(std::string name, Tag tag);
     GameObject();
 };
 
