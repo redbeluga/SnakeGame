@@ -1,5 +1,8 @@
 #include "../../include/FontManager.h"
 
+#include <string>
+#include <iostream>
+
 FontManager::FontManager() {
     // Constructor implementation, if needed
 }
@@ -18,5 +21,15 @@ sf::Font& FontManager::getFont(const std::string& filename) {
         // Handle font loading errors if needed
     }
     return fonts[filename];
+}
+
+sf::Text FontManager::addText(std::string content, sf::Font* font, int characterSize, sf::Vector2f position){
+  sf::Text text;
+  text.setFont(*font);
+  text.setPosition(position);
+  text.setCharacterSize(characterSize);
+  text.setString(content);
+  text.setOrigin(0, text.getLocalBounds().height / 2.f);
+  return text;
 }
 

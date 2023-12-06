@@ -13,8 +13,8 @@ GameObject* GameObject::getParent(){
 std::vector<GameObject*> GameObject::getChildren(){
   return c;
 }
-sf::CircleShape GameObject::getCircleShape(){
-  return circleShape;
+sf::CircleShape* GameObject::getCircleShape(){
+  return &circleShape;
 }
 std::string GameObject::getName(){
   return name;
@@ -97,11 +97,6 @@ void GameObject::updateMove(float deltaTime){
     else{
       newLoc = sf::Vector2f(targetLocation.front().x + dy*newDir.front().x, targetLocation.front().y);
     }
-    // std::cout << getName() << " relative loc: " << getRelLoc().x << ", " << getRelLoc().y << std::endl;
-    // std::cout << getName() << " current loc: " << getAbsLoc().x << ", " << getAbsLoc().y << std::endl;
-    // std::cout << getName() << " queued loc: " << targetLocation.front().x << ", " << targetLocation.front().y << std::endl;
-    // std::cout << getName() << " new loc: " << newLoc.x << ", " << newLoc.y << std::endl;
-    // clock.restart();
     circleShape.setPosition(newLoc);
     setAbsLoc(circleShape.getPosition());
     for(auto c : this->getChildren()){

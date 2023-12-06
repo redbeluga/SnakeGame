@@ -7,6 +7,7 @@ class SceneManager;
 class Scene {
 public:
   Scene(SceneManager& sceneManager);
+  int sceneIndex;
   virtual void start() = 0;
   virtual void inputHandler() = 0;
   virtual void update(sf::RenderWindow &window) = 0;

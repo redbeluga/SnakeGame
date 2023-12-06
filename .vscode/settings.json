@@ -72,6 +72,10 @@
     "deque": "cpp",
     "ranges": "cpp",
     "stack": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "memory_resource": "cpp",
+    "__functional_03": "cpp",
+    "numeric": "cpp",
+    "random": "cpp"
   }
 }

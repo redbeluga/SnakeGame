@@ -2,6 +2,8 @@
 #include "../include/SceneManager.h"
 #include "../include/GameObject.h"
 #include "../include/GameScene.h"
+#include "../include/MainMenuScene.h"
+#include "../include/EndScene.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -13,12 +15,16 @@
 
 int main()
 {
-  sf::RenderWindow renderWindow(sf::VideoMode(1000, 1000), "SFML Demo");
+  int width = sf::VideoMode::getDesktopMode().width;
+  int height = sf::VideoMode::getDesktopMode().height;
+  // std::cout << sf::VideoMode::getDesktopMode().width << ", " << sf::VideoMode::getDesktopMode().height;
+  sf::RenderWindow renderWindow(sf::VideoMode(width, height), "Snake In Your Garden", sf::Style::Resize);
   renderWindow.setKeyRepeatEnabled(false);
   SceneManager sceneManager;
-  GameScene gameScene(sceneManager);
-  sceneManager.changeScene(&gameScene);
-  
+  sceneManager.addScene(new GameScene(sceneManager));
+  sceneManager.addScene(new MainMenuScene(sceneManager));
+  sceneManager.addScene(new EndScene(sceneManager));
+  sceneManager.changeScene(1);
 
   while(renderWindow.isOpen()){
     sceneManager.eventPoller(renderWindow);

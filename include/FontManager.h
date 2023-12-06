@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <map>
+#include <string>
 
 class FontManager {
   public:
@@ -11,6 +12,7 @@ class FontManager {
 
     // Function to get a font by filename
     sf::Font& getFont(const std::string& filename);
+    static sf::Text addText(std::string content, sf::Font* font, int characterSize, sf::Vector2f position);
 
   private:
     FontManager(); // Private constructor to prevent external instantiation

@@ -41,7 +41,7 @@ class GameObject{
     int getZIndex();
     GameObject* getParent();
     std::vector<GameObject*> getChildren();
-    sf::CircleShape getCircleShape();
+    sf::CircleShape* getCircleShape();
     std::string getName();
     bool getShouldRender();
     static int isPassedLocationTarget(sf::Vector2f moveDirection, sf::Vector2f targetLocation, sf::Vector2f objectLocation);

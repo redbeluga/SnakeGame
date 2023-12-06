@@ -9,11 +9,14 @@ set(SOURCES
 
   src/gameobjects/GameObject.cpp
   src/gameobjects/SnakeObject.cpp
+  src/gameobjects/AppleObject.cpp
+
+  src/sprites/SpriteManager.cpp
 
   src/scenes/Scene.cpp
   src/scenes/GameScene.cpp
   src/scenes/EndScene.cpp
-  # src/scenes/MainMenuScene.cpp
+  src/scenes/MainMenuScene.cpp
   src/scenes/SceneManager.cpp
 
   src/fonts/FontManager.cpp

@@ -14,13 +14,15 @@
 
 // Constructor for GameScene
 GameScene::GameScene(SceneManager& sceneManager) : Scene(sceneManager), sceneManager(sceneManager){ 
-    // Initialize any game-specific resources or variables here if needed
-  initializeBoard();
-  initializeGameObjects();
+  spriteManager.setBoard(startX, startY, columns, rows, cellSize);
 }
 
 void GameScene::start() {
-
+  initializeBoard();
+  initializeGameObjects();
+  clock.restart();
+  spriteManager.spawnApple();
+  spriteManager.reset();
 }
 
 void GameScene::eventPoller(sf::RenderWindow &window) {
@@ -61,6 +63,8 @@ void GameScene::inputHandler() {
 }
 
 void GameScene::update(sf::RenderWindow &window) {
+  // std::cout << snakeObject->snakeHead->getAbsLoc().x << std::endl;
+  // std::cout << snakeObject->snakeHead->getAbsLoc().y<< std::endl;
   deltaTime = clock.getElapsedTime().asSeconds();
   collisionCheck();
   if(addBody){
@@ -73,16 +77,14 @@ void GameScene::update(sf::RenderWindow &window) {
   }
   snakeObject->updateMove(deltaTime);
   clock.restart();
-  // a->setPosition(a->getPosition() + sf::Vector2f(40, 0)*deltaTime);
-  // b->move(sf::Vector2f(40, 0)*deltaTime);
-
-
-  clock.restart();
 }
 
 void GameScene::render(sf::RenderWindow &window) {
   window.clear();
   renderedGameObjects.clear();
+  for(sf::Shape* s : backGroundSprites){
+    window.draw(*s);
+  }
 
   for (GameObject* g : allGameObjects){
     g->render(renderedGameObjects);
@@ -91,11 +93,11 @@ void GameScene::render(sf::RenderWindow &window) {
   std::sort(renderedGameObjects.begin(), renderedGameObjects.end(), GameObject::compareByZIndex);
 
   for(GameObject* g : renderedGameObjects){
-    window.draw(g->getCircleShape());
+    window.draw(*(g->getCircleShape()));
   }
 
-  window.draw(*a);
-  window.draw(*b);
+  spriteManager.renderCurrentApple(window);
+
   window.display();
 }
 
@@ -103,18 +105,14 @@ void GameScene::initializeGameObjects(){
   snakeObject = new SnakeObject();
   snakeObject->setShouldRender(true);
 
-  a = new sf::CircleShape(20);
-  b = new sf::CircleShape(20);
-  a->setPosition(0, 0);
-  b->setPosition(0, 40);
   allGameObjects.push_back(snakeObject);
 }
 
 void GameScene::collisionCheck(){
-  sf::FloatRect snakeHeadGlobalBounds = snakeObject->snakeHead->getCircleShape().getGlobalBounds();
+  sf::FloatRect snakeHeadGlobalBounds = snakeObject->snakeHead->getCircleShape()->getGlobalBounds();
   for(int i=2; i<snakeObject->snakeBodies.size(); i++){
     GameObject* it = snakeObject->snakeBodies[i];
-    if(snakeHeadGlobalBounds.intersects(it->getCircleShape().getGlobalBounds())){
+    if(snakeHeadGlobalBounds.intersects(it->getCircleShape()->getGlobalBounds())){
       sf::Vector2f nextLoc = GameObject::getNextLocation(snakeObject->snakeHead->getAbsLoc(), snakeObject->snakeHead->getCurDir());
       sf::Vector2f targetNextLoc = GameObject::getNextLocation(it->getAbsLoc(), it->getCurDir());
       sf::Vector2f targetLastLoc = it->getLastLocation();
@@ -126,15 +124,40 @@ void GameScene::collisionCheck(){
       }
     }
   }
+
+  if(spriteManager.getCurrentApple() != nullptr && snakeHeadGlobalBounds.intersects(spriteManager.getCurrentApple()->getCircleShape()->getGlobalBounds())){
+    sf::Vector2f nextLoc = GameObject::getNextLocation(snakeObject->snakeHead->getAbsLoc(), snakeObject->snakeHead->getCurDir());
+    if(snakeObject->snakeHead->getCurDir().x == 1){
+      if(snakeObject->snakeHead->getAbsLoc().x >= spriteManager.getCurrentApple()->getAbsLoc().x){
+        spriteManager.eatApple(snakeObject);
+      }
+    }
+    else if(snakeObject->snakeHead->getCurDir().x == -1){
+      if(snakeObject->snakeHead->getAbsLoc().x <= spriteManager.getCurrentApple()->getAbsLoc().x){
+        spriteManager.eatApple(snakeObject);
+      }
+    }
+    else if(snakeObject->snakeHead->getCurDir().y == 1){
+      if(snakeObject->snakeHead->getAbsLoc().y >= spriteManager.getCurrentApple()->getAbsLoc().y){
+        spriteManager.eatApple(snakeObject);
+      }
+    }
+    else {
+      if(snakeObject->snakeHead->getAbsLoc().y <= spriteManager.getCurrentApple()->getAbsLoc().y){
+        spriteManager.eatApple(snakeObject);
+      }
+    }
+  }
 }
 
 void GameScene::initializeBoard(){
   board = new sf::RectangleShape(sf::Vector2f(columns*cellSize, rows*cellSize));
+  board->setPosition(startX + cellSize/2, startY + cellSize/2);
   backGroundSprites.push_back(board);
 }
 
 void GameScene::endGame(){
-  sceneManager.changeScene(new EndScene(sceneManager));
+  sceneManager.changeScene(2);
 }
 
 // void GameScene::updateBoard(sf::RenderWindow &window){

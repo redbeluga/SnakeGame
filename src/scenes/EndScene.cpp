@@ -1,7 +1,8 @@
 #include "../../include/EndScene.h"
 
 
-EndScene::EndScene(SceneManager& sceneManager) : Scene(sceneManager), sceneManager(sceneManager){ 
+EndScene::EndScene(SceneManager& sceneManager) : Scene(sceneManager), sceneManager(sceneManager){
+   
 }
 void EndScene::start() {
 

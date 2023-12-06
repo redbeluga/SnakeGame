@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "SnakeObject.h"
 #include "SceneManager.h"
+#include "SpriteManager.h"
 
 #include <unordered_map>
 #include <vector>
@@ -21,6 +22,7 @@ class GameScene : public Scene {
     std::vector<GameObject*> allGameObjects;
     std::vector<GameObject*> renderedGameObjects;
     std::vector<sf::Shape*> backGroundSprites;
+    SpriteManager spriteManager;
 
     //Input
     std::unordered_map<int, bool> keyMap;
@@ -30,22 +32,12 @@ class GameScene : public Scene {
     bool moveInput = false;
     bool addBody = false;
     SnakeObject* snakeObject;
-    sf::CircleShape* a;
-    sf::CircleShape* b;
 
     // Event Poller
     sf::Event event;
 
     //Movement
-    sf::Vector2f moveDir = sf::Vector2f(1, 0);
-
-    //Board
-    sf::RectangleShape* board;
-    int startX;
-    int startY;
-    int columns = 17;
-    int rows = 15;
-    int cellSize = 40;
+    sf::Vector2f moveDir;
 
 
   public:
@@ -60,6 +52,14 @@ class GameScene : public Scene {
     void collisionCheck();
     void endGame();
     // void updateBoard(sf::RenderWindow &window);
+
+    //Board
+    sf::RectangleShape* board;
+    int startX = 40;
+    int startY = 160 ;
+    int columns = 17;
+    int rows = 15;
+    int cellSize = 40;
 };
 
 #endif
