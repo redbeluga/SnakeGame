@@ -18,9 +18,11 @@ class GameObject{
     Tag tag;
 
     sf::CircleShape circleShape;
+    sf::Sprite sprite;
+    sf::Texture texture;
 
-    float moveSpeed = 200;
-    sf::Vector2f curDir = sf::Vector2f(0, -1);
+    float moveSpeed = 270;
+    sf::Vector2f curDir = sf::Vector2f(0, 1);
     std::queue<sf::Vector2f> newDir;
     std::queue<sf::Vector2f> targetLocation;
     std::stack<sf::Vector2f> lastLocation;
@@ -42,11 +44,13 @@ class GameObject{
     GameObject* getParent();
     std::vector<GameObject*> getChildren();
     sf::CircleShape* getCircleShape();
+    sf::Texture* getTexture();
     std::string getName();
     bool getShouldRender();
     static int isPassedLocationTarget(sf::Vector2f moveDirection, sf::Vector2f targetLocation, sf::Vector2f objectLocation);
     sf::Vector2f getLastLocation();
-    static sf::Vector2f getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir);
+    static sf::Vector2f getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir, float startX, float startY, float cellSize);
+    sf::Sprite* getSprite();
 
     void setCurDir(sf::Vector2f dir);
     void setAbsLoc(sf::Vector2f absLoc);
@@ -54,10 +58,13 @@ class GameObject{
     void setParent(GameObject* p);
     void addChild(GameObject* c);
     void setCircleShape(sf::CircleShape CircleShape, bool shouldRender, int zIndex);
+    void setSprite(sf::Sprite sprite, bool shouldRender, int zIndex);
+    void createTexture();
     void newMove(sf::Vector2f move, sf::Vector2f location);
     virtual void updateMove(float deltaTime);
     void move(float deltaTime);
     void setCircleShapePosition(sf::Vector2f newPos);
+    void setSpritePosition(sf::Vector2f newPos);
     void setShouldRender(bool render);
     virtual void render(std::vector<GameObject*> &renderedGameObjects);
 

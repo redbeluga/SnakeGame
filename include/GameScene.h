@@ -6,6 +6,7 @@
 #include "SnakeObject.h"
 #include "SceneManager.h"
 #include "SpriteManager.h"
+#include "FontManager.h"
 
 #include <unordered_map>
 #include <vector>
@@ -17,12 +18,23 @@ class GameScene : public Scene {
     //Time
     sf::Clock clock;
     float deltaTime;
+    bool gameEnded = false;
 
     //Object Pools
     std::vector<GameObject*> allGameObjects;
     std::vector<GameObject*> renderedGameObjects;
     std::vector<sf::Shape*> backGroundSprites;
+    sf::RectangleShape* filter;
+
+    SnakeObject* snakeObject;
     SpriteManager spriteManager;
+    std::vector<sf::Texture*> textures;
+    std::vector<sf::Sprite> sprites;
+
+    std::vector<sf::Text> text;
+    FontManager& fontManager = FontManager::getInstance(); 
+    std::map<std::string, sf::Font> fonts;
+
 
     //Input
     std::unordered_map<int, bool> keyMap;
@@ -31,7 +43,6 @@ class GameScene : public Scene {
     //GameObjects
     bool moveInput = false;
     bool addBody = false;
-    SnakeObject* snakeObject;
 
     // Event Poller
     sf::Event event;
@@ -44,19 +55,24 @@ class GameScene : public Scene {
     GameScene(SceneManager& sceneManager); // Constructor
     virtual void start() override;
     virtual void inputHandler() override;
-    virtual void update(sf::RenderWindow &window) override;
-    virtual void render(sf::RenderWindow &window) override;
-    virtual void eventPoller(sf::RenderWindow &window) override;
+    virtual void update() override;
+    virtual void render() override;
+    virtual void eventPoller() override;
     void initializeGameObjects();
     void initializeBoard();
+    void initializeText();
     void collisionCheck();
     void endGame();
+    void updateScore();
     // void updateBoard(sf::RenderWindow &window);
 
     //Board
-    sf::RectangleShape* board;
+    // sf::RectangleShape* board;
+    std::vector<sf::Sprite> board;
     int startX = 40;
-    int startY = 160 ;
+    int startY = 160;
+    int endX;
+    int endY;
     int columns = 17;
     int rows = 15;
     int cellSize = 40;

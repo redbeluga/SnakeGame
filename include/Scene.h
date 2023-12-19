@@ -10,11 +10,15 @@ public:
   int sceneIndex;
   virtual void start() = 0;
   virtual void inputHandler() = 0;
-  virtual void update(sf::RenderWindow &window) = 0;
-  virtual void render(sf::RenderWindow &window) = 0;
-  virtual void eventPoller(sf::RenderWindow &window) = 0;
+  virtual void update() = 0;
+  virtual void render() = 0;
+  virtual void eventPoller() = 0;
+  void setWindow(sf::RenderWindow* window);
+  
+
 protected:
   SceneManager& sceneManager;
+  sf::RenderWindow* window;
 };
 
 #endif

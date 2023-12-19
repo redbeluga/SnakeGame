@@ -4,6 +4,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
+// This was supposed to be for all game objects but it got a bit messy to implement
+// now its only used for the snake circles
+
+
 sf::Vector2f GameObject::getCurDir(){
   return curDir;
 }
@@ -15,6 +19,12 @@ std::vector<GameObject*> GameObject::getChildren(){
 }
 sf::CircleShape* GameObject::getCircleShape(){
   return &circleShape;
+}
+sf::Texture* GameObject::getTexture(){
+  return &texture;
+}
+sf::Sprite* GameObject::getSprite(){
+  return &sprite;
 }
 std::string GameObject::getName(){
   return name;
@@ -28,13 +38,17 @@ sf::Vector2f GameObject::getRelLoc(){
 sf::Vector2f GameObject::getLastLocation(){
   return lastLocation.top();
 }
-sf::Vector2f GameObject::getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir){
-  sf::Vector2f queuedLoc(curLoc.x, curLoc.y);
+
+
+// This function calculates what its next location is in the board using a grid of cell size 40 by 40 pixels
+sf::Vector2f GameObject::getNextLocation(sf::Vector2f curLoc, sf::Vector2f curDir, float startX, float startY, float cellSize){
+  sf::Vector2f queuedLoc(curLoc.x - (startX + cellSize/2), curLoc.y - (startY + cellSize/2));
   int rX = static_cast<int>(queuedLoc.x) % 40;
   int rY = static_cast<int>(queuedLoc.y) % 40;
   queuedLoc.x = static_cast<int>(queuedLoc.x) + ((rX == 0 || curDir.x == 0) ? 0 : curDir.x > 0 ? (40 - rX) : -rX);
   queuedLoc.y = static_cast<int>(queuedLoc.y) + ((rY == 0 || curDir.y == 0) ? 0 : curDir.y > 0 ? (40 - rY) : -rY);
-  return queuedLoc;
+
+  return sf::Vector2f(queuedLoc.x + startX + cellSize/2, queuedLoc.y + startY + cellSize/2);
 }
 bool GameObject::getShouldRender(){
   return shouldRender;
@@ -42,6 +56,8 @@ bool GameObject::getShouldRender(){
 int GameObject::getZIndex(){
   return zIndex;
 }
+
+// This checks if the a certain location is past another location depending on its direction of movement
 int GameObject::isPassedLocationTarget(sf::Vector2f moveDirection, sf::Vector2f targetLocation, sf::Vector2f objectLocation){
   // Calculate the vector from object location to specified location
   if(moveDirection.x == 0){
@@ -78,6 +94,21 @@ void GameObject::setCircleShape(sf::CircleShape s, bool shouldRender, int zIndex
   this->zIndex = zIndex;
   setCircleShapePosition(absLoc);
 }
+void GameObject::setSprite(sf::Sprite s, bool shouldRender, int zIndex){
+  this->sprite = s;
+  this->shouldRender = shouldRender;
+  this->zIndex = zIndex;
+  setSpritePosition(absLoc);
+}
+void GameObject::createTexture(){
+  texture = sf::Texture();
+}
+
+// The next three functions are used to move the snake in an orerly function
+// It logs the location of where the snake should make a turn in a queue 
+// When it reaches the location, it makes its turn
+// After it makes the turn, it sends that location to the queue of its child
+// so that its child knows to make the turn when it reaches that location
 void GameObject::newMove(sf::Vector2f moveDir, sf::Vector2f location){
   newDir.push(moveDir);
   targetLocation.push(location);
@@ -120,6 +151,9 @@ void GameObject::move(float deltaTime){
 void GameObject::setCircleShapePosition(sf::Vector2f newPos){
   this->circleShape.setPosition(newPos);
 }
+void GameObject::setSpritePosition(sf::Vector2f newPos){
+  this->sprite.setPosition(newPos);
+} 
 void GameObject::setShouldRender(bool render){
   this->shouldRender = render;
 }

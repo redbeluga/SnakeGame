@@ -1,17 +1,20 @@
 #include "../../include/EndScene.h"
 
+// We planned to use this but it was not used in the end
+// Scene used after snake dies
 
 EndScene::EndScene(SceneManager& sceneManager) : Scene(sceneManager), sceneManager(sceneManager){
    
 }
+
 void EndScene::start() {
 
 }
 
-void EndScene::eventPoller(sf::RenderWindow &window) {
-  while (window.pollEvent(event)){
+void EndScene::eventPoller() {
+  while (window->pollEvent(event)){
     if (event.type == sf::Event::EventType::Closed)
-      window.close();
+      window->close();
     else if(event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::KeyReleased){
       if(event.type == sf::Event::EventType::KeyPressed){
         tappedKeyMapping[event.key.code] = true;
@@ -24,10 +27,10 @@ void EndScene::eventPoller(sf::RenderWindow &window) {
 void EndScene::inputHandler() {
 }
 
-void EndScene::update(sf::RenderWindow &window) {
+void EndScene::update() {
 }
 
-void EndScene::render(sf::RenderWindow &window) {
-  window.clear();
-  window.display();
+void EndScene::render() {
+  window->clear();
+  window->display();
 }

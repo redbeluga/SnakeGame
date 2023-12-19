@@ -4,8 +4,10 @@
 
 #include <iostream>
 
-SceneManager::SceneManager() : currentScene(nullptr) {
+// Used to swap scenes
 
+SceneManager::SceneManager(sf::RenderWindow &window) : currentScene(nullptr) {
+  this->window = &window;
 }
 
 void SceneManager::changeScene(int index) {
@@ -15,19 +17,19 @@ void SceneManager::changeScene(int index) {
   }
 }
 
-void SceneManager::update(sf::RenderWindow &window) {
+void SceneManager::update() {
   if (currentScene) {
-    currentScene->update(window);
+    currentScene->update();
   }
 }
-void SceneManager::render(sf::RenderWindow &window) {
+void SceneManager::render() {
   if (currentScene) {
-    currentScene->render(window);
+    currentScene->render();
   }
 }
-void SceneManager::eventPoller(sf::RenderWindow &window){
+void SceneManager::eventPoller(){
   if(currentScene){
-    currentScene->eventPoller(window);
+    currentScene->eventPoller();
   }
 }
 
@@ -38,10 +40,15 @@ void SceneManager::inputHandler(){
 }
 
 void SceneManager::addScene(Scene* scene){
+  scene->setWindow(this->window);
   scenes.push_back(scene);
   scene->sceneIndex = scenes.size()-1;
 }
 
 int SceneManager::getCurrentIndex(){
   return currentScene->sceneIndex;
+}
+
+sf::RenderWindow* SceneManager::getRenderWindow(){
+  return window;
 }

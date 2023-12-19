@@ -16,11 +16,15 @@ public:
   int activeAppleIndex = -1;
   AppleObject* getCurrentApple();
   void renderCurrentApple(sf::RenderWindow &window);  
+
   SpriteManager();
+
   void spawnApple();
   void setBoard(int startX, int startY, int columns, int rows, int cellSize);
+  void setSnakeObject(SnakeObject* snakeObject);
   void eatApple(SnakeObject* snake);
   void reset();
+  int getScore();
 
 private:
   int startX;
@@ -28,6 +32,8 @@ private:
   int columns = 17;
   int rows = 15;
   int cellSize = 40;
+  
+  SnakeObject* snakeObject;
 
   int score;
 };

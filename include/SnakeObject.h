@@ -15,7 +15,9 @@ class SnakeObject : public GameObject{
     sf::CircleShape snakeBodySprite;
     sf::CircleShape circleShape;
 
-    SnakeObject();
+    float startX, startY, cellSize;
+
+    SnakeObject(float startX, float startY, float cellSize);
     
     void addBody();
     virtual void render(std::vector<GameObject*> &renderedGameObjects) override;

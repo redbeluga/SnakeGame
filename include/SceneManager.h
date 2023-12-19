@@ -8,17 +8,19 @@
 
 class SceneManager{
   public:
-    SceneManager();
-    void update(sf::RenderWindow &window);
-    void render(sf::RenderWindow &window);
-    void eventPoller(sf::RenderWindow &window);
+    SceneManager(sf::RenderWindow &window);
+    void update();
+    void render();
+    void eventPoller();
     void inputHandler();
     void addScene(Scene* scene);
     void changeScene(int index);
     int getCurrentIndex();
+    sf::RenderWindow* getRenderWindow();
   private:
     Scene* currentScene;
     std::vector<Scene*> scenes;
+    sf::RenderWindow* window;
 };
 
 #endif

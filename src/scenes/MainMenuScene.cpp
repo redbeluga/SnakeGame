@@ -3,14 +3,15 @@
 #include <iostream>
 
 MainMenuScene::MainMenuScene(SceneManager& sceneManager) : Scene(sceneManager), sceneManager(sceneManager){
-   start();
 }
+
 void MainMenuScene::start() {
-  // Load Shit
+  // Grab necessary fonts
   fonts["Nightside"] = fontManager.getFont("../fonts/NightsideDemoRegular.ttf");
   titleTexture.loadFromFile("../sprites/title.png");
   titleTexture.setSmooth(true);
-  // std::cout << backGroundSprites.size() << std::endl;
+  
+  // setup sprites for the background 
   titleSprite.setTexture(titleTexture);
   titleSprite.setPosition(50, 150);
   backGroundSprites.push_back(titleSprite);
@@ -22,31 +23,16 @@ void MainMenuScene::start() {
   letterHighlightTexture.loadFromFile("../sprites/highlight.png");
   letterHighlightSprite.setTexture(letterHighlightTexture);
   letterHighlightSprite.setOrigin((sf::Vector2f)letterHighlightTexture.getSize() / 2.f);
-  // letterHighlightSprite.setPosition(sf::Vector2f(backgroundText[selected].getGlobalBounds().left+backgroundText[selected].getGlobalBounds().width + 10, backgroundText[selected].getPosition().y));
-  // backGroundSprites.push_back(letterHighlightSprite);
-  letterHighlightSprite.scale(-1.f, 1.f);
+  letterHighlightSprite.rotate(180);
   letterHighlightSprite.setPosition(sf::Vector2f(backgroundText[selected].getGlobalBounds().left-10, backgroundText[selected].getPosition().y));
   backGroundSprites.push_back(letterHighlightSprite);
-  // letterHighlightTexture.setSmooth(true);
-  // letterHighlightSprite.setTexture(letterHighlightTexture);
-  // letterHighlightSprite.setPosition(510, 402);
-  // backGroundSprites.push_back(letterHighlightSprite);
-  // letterHighlightSprite.setPosition(510, 447);
-  // backGroundSprites.push_back(letterHighlightSprite);
-  // letterHighlightSprite.setPosition(510, 492);
-  // backGroundSprites.push_back(letterHighlightSprite);
-  
-
-  // std::cout << backGroundSprites.size() << std::endl;
-
-  // std::cout << backGroundSprites.size() << std::endl;
 }
 
-void MainMenuScene::eventPoller(sf::RenderWindow &window) {
+void MainMenuScene::eventPoller() {
   tappedKeyMapping.clear();
-  while (window.pollEvent(event)){
+  while (window->pollEvent(event)){
     if (event.type == sf::Event::EventType::Closed)
-      window.close();
+      window->close();
     else if(event.type == sf::Event::EventType::KeyPressed || event.type == sf::Event::EventType::KeyReleased){
       if(event.type == sf::Event::EventType::KeyPressed){
         tappedKeyMapping[event.key.code] = true;
@@ -56,8 +42,12 @@ void MainMenuScene::eventPoller(sf::RenderWindow &window) {
   }
 }
 
+// This is used to change the selection between "start game", "options", and "credits"
+
 void MainMenuScene::inputHandler() {
+  switchScenes = false;
   if(tappedKeyMapping[sf::Keyboard::Key::Enter]){
+    std::cout << 1 << std::endl;
     switchScenes = true;
   }
   if(tappedKeyMapping[sf::Keyboard::Key::Down]){
@@ -74,21 +64,16 @@ void MainMenuScene::inputHandler() {
 
 void MainMenuScene::changeSelection(){
   backGroundSprites.pop_back();
-  // backGroundSprites.pop_back();
   int gap = 15;
-  // letterHighlightSprite.scale(-1.f, 1.f);
-  // letterHighlightSprite.setPosition(sf::Vector2f(backgroundText[selected].getGlobalBounds().left+backgroundText[selected].getGlobalBounds().width + gap, backgroundText[selected].getPosition().y));
-  // backGroundSprites.push_back(letterHighlightSprite);
-  // letterHighlightSprite.scale(-1.f, 1.f);
   letterHighlightSprite.setPosition(sf::Vector2f(backgroundText[selected].getGlobalBounds().left - gap, backgroundText[selected].getPosition().y));
   backGroundSprites.push_back(letterHighlightSprite);
 }
 
-void MainMenuScene::update(sf::RenderWindow &window) {
+void MainMenuScene::update() {
 }
 
-void MainMenuScene::render(sf::RenderWindow &window) {
-  window.clear();
+void MainMenuScene::render() {
+  window->clear();
 
   if(switchScenes){
     if(selected == 0){
@@ -99,11 +84,11 @@ void MainMenuScene::render(sf::RenderWindow &window) {
     }
   }
   for(auto s : backGroundSprites){
-    window.draw(s);
+    window->draw(s);
   }
   for(auto t : backgroundText){
-    window.draw(t);
+    window->draw(t);
   }
 
-  window.display();
+  window->display();
 }

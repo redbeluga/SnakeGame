@@ -36,9 +36,9 @@ class MainMenuScene : public Scene{
     MainMenuScene(SceneManager& sceneManager); // Constructor
     virtual void start() override;
     virtual void inputHandler() override;
-    virtual void update(sf::RenderWindow &window) override;
-    virtual void render(sf::RenderWindow &window) override;
-    virtual void eventPoller(sf::RenderWindow &window) override;
+    virtual void update() override;
+    virtual void render() override;
+    virtual void eventPoller() override;
 
     void changeSelection();
     // void updateBoard(sf::RenderWindow &window);

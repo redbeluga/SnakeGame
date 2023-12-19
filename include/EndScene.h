@@ -21,9 +21,9 @@ class EndScene : public Scene{
     EndScene(SceneManager& sceneManager); // Constructor
     virtual void start() override;
     virtual void inputHandler() override;
-    virtual void update(sf::RenderWindow &window) override;
-    virtual void render(sf::RenderWindow &window) override;
-    virtual void eventPoller(sf::RenderWindow &window) override;
+    virtual void update() override;
+    virtual void render() override;
+    virtual void eventPoller() override;
     // void updateBoard(sf::RenderWindow &window);
 };
 
